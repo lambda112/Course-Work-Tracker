@@ -1,3 +1,4 @@
+import os
 from tkinter import *
 
 root = Tk()
@@ -38,18 +39,33 @@ unit12 = create_checkbox(unit_list = unit7_tasks, column_val=1, row_val=3)
 unit22 = create_checkbox(unit_list = unit7_tasks, column_val=1, row_val=4)
 unit23 = create_checkbox(unit_list = unit23_tasks, column_val=1, row_val=5)
 unit24 = create_checkbox(unit_list = unit10_tasks, column_val=1, row_val=6)
+
 all_work = unit7 + unit9 + unit10 + unit12 + unit22 + unit23 + unit24
+
+if os.path.isfile("coursework.txt"):
+    with open("coursework.txt") as f:
+        data = f.read().split(",")
+        del data[-1]   
+        
+        for index, var in enumerate(data):
+            all_work[index].set(int(var))
 
 # Button
 def update_total():
     total = 0
+
+    if os.path.isfile("coursework.txt"):
+        with open("coursework.txt", "w") as f:
+            pass
+
     for unit in all_work:
-        print(unit.get())
+        with open("coursework.txt", "a") as f:
+            f.write(f"{unit.get()},")
+        
         if unit.get():
             total+=1
 
     total_label.config(text = f"Total: {total}")
     
 done_button = Button(text = "Calculate Total", command=update_total).grid(row=7, column=11)
-
 root.mainloop()
